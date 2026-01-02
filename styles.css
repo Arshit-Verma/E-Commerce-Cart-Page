@@ -81,3 +81,22 @@ h2 {
 .hidden {
   display: none;
 }
+
+#cart-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px
+}
+
+#removeBtn {
+  color: white;
+  background-color: #d32f2f;
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+#removeBtn:hover {
+  background-color: #b71c1c;
+}

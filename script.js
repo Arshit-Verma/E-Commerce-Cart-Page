@@ -48,10 +48,24 @@ document.addEventListener("DOMContentLoaded", () => {
             cart.forEach((item,index) =>{
                 totalPrice += item.price
                 const cartItem = document.createElement("div")
+                // const removebtn = document.createElement("div")
+                // removebtn.innerHTML = `
+                
+                // `
                 cartItem.innerHTML = `
                 ${item.name} - ${item.price.toFixed(2)}
+                <button id= "removeBtn">Remove</button>
                 `
+                cartItem.setAttribute("id","cart-item")
                 cartItems.appendChild(cartItem)
+
+                cartItem.querySelector("button").addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const itemIndex = index; // Use the index from the forEach loop
+                    cart.splice(itemIndex, 1); // Remove the item from the cart array
+                    cartItem.remove(); // Remove the DOM element
+                    renderCart(); // Re-render the cart to update the UI
+                })
             })
             totalPriceDisplay.textContent = `${totalPrice.toFixed(2)}`
             cartTotalMessage.classList.remove('hidden')
