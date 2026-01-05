@@ -5,8 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
         {id: 3, name: "Product 3", price: 39.99 },
     ]
 
-    const cart = []
+    const cart = JSON.parse(localStorage.getItem("cart")) || []
 
+
+    // Get references to DOM elements from html file
     const productList = document.getElementById("product-list")
     const cartItems = document.getElementById("cart-items")
     const emptyCartMessage = document.getElementById("empty-cart")
@@ -14,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalPriceDisplay = document.getElementById("total-price")
     const checkoutBtn = document.getElementById("checkout-btn")
 
-    // Render all the products
 
     products.forEach(product => {
         const productDiv = document.createElement('div')
@@ -27,19 +28,23 @@ document.addEventListener("DOMContentLoaded", () => {
         productList.appendChild(productDiv)
     })
 
-    productList.addEventListener("click", (e) => {
+    productList.addEventListener("click", (e) => { // Event listener for add to cart button
         if(e.target.tagName === 'BUTTON'){
             const productId = parseInt(e.target.getAttribute('data-id'))
             const product = products.find(p => p.id === productId)
             addToCart(product)
-            renderCart(cart)
+            renderCart()
         }
     })
+    renderCart()
 
-    function addToCart(product){
+    
+    function addToCart(product){ // function to add products to cart
         cart.push(product)
+        saveCart()
     }
 
+    // Render all the products
     function renderCart(){
         cartItems.innerText = "" // use innerText and not innerHtml because cartitems jjad one para only which comes under text category
         let totalPrice = 0
@@ -47,11 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
             emptyCartMessage.classList.add('hidden')
             cart.forEach((item,index) =>{
                 totalPrice += item.price
+
                 const cartItem = document.createElement("div")
-                // const removebtn = document.createElement("div")
-                // removebtn.innerHTML = `
-                
-                // `
                 cartItem.innerHTML = `
                 ${item.name} - ${item.price.toFixed(2)}
                 <button id= "removeBtn">Remove</button>
@@ -63,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     e.stopPropagation();
                     const itemIndex = index; // Use the index from the forEach loop
                     cart.splice(itemIndex, 1); // Remove the item from the cart array
+                    saveCart()
                     cartItem.remove(); // Remove the DOM element
                     renderCart(); // Re-render the cart to update the UI
                 })
@@ -81,7 +84,12 @@ document.addEventListener("DOMContentLoaded", () => {
     checkoutBtn.addEventListener('click',() => {
         cart.length = 0
         alert("Checkout successfully")
+        saveCart()
         renderCart()
     })
+
+    function saveCart(){
+        localStorage.setItem("cart",JSON.stringify(cart))
+    }
 
 })
